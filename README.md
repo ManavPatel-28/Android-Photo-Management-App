@@ -31,42 +31,7 @@ Search by tags with AND/OR & Auto-Complete
 Slideshow (manual navigation)
 
 
-Project Structure
-AndroidApp78/
-├── app/
-│   ├── src/main/java/com/example/andriodapp78/
-│   │   ├── MainActivity.java                 # Home screen
-│   │   ├── AlbumActivity.java                # Album photo list
-│   │   ├── PhotoViewActivity.java            # Full-size viewer + slideshow
-│   │   ├── SearchActivity.java               # Search UI + auto-complete
-│   │   ├── photos/model/
-│   │   │   ├── Album.java
-│   │   │   ├── Photo.java
-│   │   │   ├── Tag.java
-│   │   │   └── PhotoLibrary.java
-│   │   ├── photos/storage/
-│   │   │   └── Storage.java
-│   │   ├── photos/ui/
-│   │   │   ├── AlbumListAdapter.java
-│   │   │   ├── PhotoListAdapter.java
-│   │   │   ├── SearchResultsAdapter.java
-│   │   │   └── ViewHolders.java
-│   ├── res/layout/
-│   │   ├── activity_main.xml
-│   │   ├── activity_album.xml
-│   │   ├── activity_photo_view.xml
-│   │   ├── activity_search.xml
-│   │   ├── item_album.xml
-│   │   ├── item_photo.xml
-│   │   └── item_search_result.xml
-│   ├── res/menu/
-│   │   ├── menu_main.xml
-│   │   └── menu_photo_view.xml
-│   ├── res/values/
-│       ├── strings.xml
-│       ├── colors.xml
-│       └── themes.xml
-└── README.md
+<img width="549" height="774" alt="image" src="https://github.com/user-attachments/assets/7ee2e0af-7cb4-4d4f-aa57-01355ab918a3" />
 
 
 Data Storage

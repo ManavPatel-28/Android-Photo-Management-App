@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Row 1: Tag 1 type + value -->
+    <RadioGroup
+        android:id="@+id/group_type1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/radio_person1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Person" />
+
+        <RadioButton
+            android:id="@+id/radio_location1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location" />
+    </RadioGroup>
+
+    <!-- Tag value 1 (AutoComplete) -->
+    <AutoCompleteTextView
+        android:id="@+id/edit_tag_value1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Tag value 1"
+        android:inputType="text"
+        app:layout_constraintTop_toTopOf="@id/group_type1"
+        app:layout_constraintBottom_toBottomOf="@id/group_type1"
+        app:layout_constraintStart_toEndOf="@id/group_type1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        android:layout_marginStart="16dp" />
+
+    <!-- Row 2: Tag 2 type + value (optional) -->
+    <RadioGroup
+        android:id="@+id/group_type2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/group_type1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/radio_person2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Person" />
+
+        <RadioButton
+            android:id="@+id/radio_location2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location" />
+    </RadioGroup>
+
+    <AutoCompleteTextView
+        android:id="@+id/edit_tag_value2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Tag value 2 (optional)"
+        android:inputType="text"
+        app:layout_constraintTop_toTopOf="@id/group_type2"
+        app:layout_constraintBottom_toBottomOf="@id/group_type2"
+        app:layout_constraintStart_toEndOf="@id/group_type2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp" />
+
+    <!-- Row 3: AND / OR + Search button -->
+    <RadioGroup
+        android:id="@+id/group_and_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/group_type2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/radio_and"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="AND" />
+
+        <RadioButton
+            android:id="@+id/radio_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OR" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        app:layout_constraintTop_toTopOf="@id/group_and_or"
+        app:layout_constraintBottom_toBottomOf="@id/group_and_or"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Search results list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_results"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/group_and_or"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <ImageView
+        android:id="@+id/image_thumb_search"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/app_name" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Album — Caption"
+            android:textStyle="bold"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/text_line2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tags"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

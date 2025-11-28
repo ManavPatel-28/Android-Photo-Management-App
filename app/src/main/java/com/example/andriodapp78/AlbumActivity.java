@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,20 +43,29 @@ public class AlbumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
-        // Load library for THIS activity
+        // ===== Toolbar with back arrow =====
+        Toolbar toolbar = findViewById(R.id.toolbar_album);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // back arrow
+        }
+
+        // ----- Load library -----
         library = Storage.load(this);
 
-        // Find album by name
+        // Find album by name from intent
         String albumName = getIntent().getStringExtra(EXTRA_ALBUM_NAME);
         if (albumName != null) {
             album = library.findAlbum(albumName);
         }
 
-        TextView title = findViewById(R.id.text_album_title);
-        if (album != null) {
-            title.setText("Album: " + album.getName());
-        } else {
-            title.setText("Album not found");
+        // Set toolbar title
+        if (getSupportActionBar() != null) {
+            if (album != null) {
+                getSupportActionBar().setTitle("Album: " + album.getName());
+            } else {
+                getSupportActionBar().setTitle("Album not found");
+            }
         }
 
         // ----- RecyclerView -----
@@ -64,34 +74,20 @@ public class AlbumActivity extends AppCompatActivity {
 
         List<Photo> existing = (album != null) ? album.getPhotos() : new ArrayList<>();
 
-        photoAdapter = new PhotoListAdapter(
-                existing,
+        // Only one callback: open the clicked photo
+        photoAdapter = new PhotoListAdapter(existing,
                 new PhotoListAdapter.OnPhotoClickListener() {
                     @Override
                     public void onPhotoClick(Photo photo) {
-                        if (album == null || photo == null) {
-                            return;
-                        }
-
-                        int index = album.getPhotos().indexOf(photo);
-                        if (index < 0) {
-                            return;
-                        }
-
-                        Intent intent = new Intent(AlbumActivity.this, PhotoViewActivity.class);
-                        intent.putExtra(PhotoViewActivity.EXTRA_ALBUM_NAME, album.getName());
-                        intent.putExtra(PhotoViewActivity.EXTRA_PHOTO_INDEX, index);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onPhotoLongClick(Photo photo) {
-                        showPhotoOptionsDialog(photo);
+                        openPhoto(photo);
                     }
                 });
+        // If you prefer a lambda and your project supports it:
+        // photoAdapter = new PhotoListAdapter(existing, photo -> openPhoto(photo));
+
         recyclerPhotos.setAdapter(photoAdapter);
 
-        // ----- SAF picker -----
+        // ----- SAF picker for adding a photo -----
         pickImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.OpenDocument(),
                 uri -> {
@@ -145,18 +141,86 @@ public class AlbumActivity extends AppCompatActivity {
         });
     }
 
-    // ====== Photo options (Move / Delete) on long press ======
-    private void showPhotoOptionsDialog(Photo photo) {
-        String[] options = {"Move Photo", "Delete Photo", "Cancel"};
+    // Open the tapped photo in PhotoViewActivity
+    private void openPhoto(Photo photo) {
+        if (album == null || photo == null) return;
+
+        int index = album.getPhotos().indexOf(photo);
+        if (index < 0) return;
+
+        Intent intent = new Intent(AlbumActivity.this, PhotoViewActivity.class);
+        intent.putExtra(PhotoViewActivity.EXTRA_ALBUM_NAME, album.getName());
+        intent.putExtra(PhotoViewActivity.EXTRA_PHOTO_INDEX, index);
+        startActivity(intent);
+    }
+
+    // ===== Toolbar 3-dot menu (Move/Delete) =====
+
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_album, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            // Back arrow in toolbar
+            finish();
+            return true;
+        } else if (id == R.id.action_move_photo) {
+            showChoosePhotoThenMove();
+            return true;
+        } else if (id == R.id.action_delete_photo) {
+            showChoosePhotoThenDelete();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // First dialog: choose which photo, then move
+    private void showChoosePhotoThenMove() {
+        if (album == null || album.getPhotos().isEmpty()) {
+            Toast.makeText(this, "No photos to move", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<Photo> photos = album.getPhotos();
+        String[] names = new String[photos.size()];
+        for (int i = 0; i < photos.size(); i++) {
+            names[i] = photos.get(i).getCaption();
+        }
 
         new AlertDialog.Builder(this)
-                .setTitle("Photo options")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        showMovePhotoDialog(photo);
-                    } else if (which == 1) {
-                        deletePhoto(photo);
-                    }
+                .setTitle("Move which photo?")
+                .setItems(names, (dialog, which) -> {
+                    Photo chosen = photos.get(which);
+                    showMovePhotoDialog(chosen);
+                })
+                .show();
+    }
+
+    // First dialog: choose which photo, then delete
+    private void showChoosePhotoThenDelete() {
+        if (album == null || album.getPhotos().isEmpty()) {
+            Toast.makeText(this, "No photos to delete", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<Photo> photos = album.getPhotos();
+        String[] names = new String[photos.size()];
+        for (int i = 0; i < photos.size(); i++) {
+            names[i] = photos.get(i).getCaption();
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete which photo?")
+                .setItems(names, (dialog, which) -> {
+                    Photo chosen = photos.get(which);
+                    deletePhoto(chosen);
                 })
                 .show();
     }

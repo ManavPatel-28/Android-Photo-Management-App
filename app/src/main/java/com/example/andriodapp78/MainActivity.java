@@ -2,13 +2,13 @@ package com.example.andriodapp78;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // ----- Toolbar with title + 3-dot menu -----
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Android Photos App");
+        }
+
+        // ----- RecyclerView -----
         recyclerView = findViewById(R.id.recycler_albums);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -54,23 +62,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAlbumLongClick(Album album) {
+                // Optional: keep long-press menu on each album row
                 showAlbumOptionsDialog(album);
             }
         });
         recyclerView.setAdapter(adapter);
 
-        // Existing FAB: create album
+        // ----- FAB: add album -----
         FloatingActionButton fabAdd = findViewById(R.id.fab_add_album);
         fabAdd.setOnClickListener(v -> showAddAlbumDialog());
 
-        // NEW FAB: open SearchActivity
+        // ----- FAB: open SearchActivity -----
         FloatingActionButton fabSearch = findViewById(R.id.fab_search);
-        if (fabSearch != null) {
-            fabSearch.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent);
-            });
-        }
+        fabSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivity(intent);
+        });
     }
 
     // When we come back from an album, reload from disk so counts are correct
@@ -82,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
         albums.addAll(library.getAlbums());
         adapter.notifyDataSetChanged();
     }
+
+    // ---------- OLD dialog helpers (per-album) ----------
 
     private void showAlbumOptionsDialog(Album album) {
         String[] options = {"Rename", "Delete", "Cancel"};
@@ -202,20 +211,66 @@ public class MainActivity extends AppCompatActivity {
         Storage.save(this, library);
     }
 
-    // ===== toolbar menu for Search (kept – harmless even if you use FAB) =====
+    // ---------- Toolbar 3-dot menu: rename/delete album ----------
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_search) {
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
+    public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_rename_album) {
+            showChooseAlbumThenRename();
+            return true;
+        } else if (id == R.id.action_delete_album) {
+            showChooseAlbumThenDelete();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showChooseAlbumThenRename() {
+        if (albums.isEmpty()) {
+            Toast.makeText(this, "No albums to rename", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] names = new String[albums.size()];
+        for (int i = 0; i < albums.size(); i++) {
+            names[i] = albums.get(i).getName();
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Rename which album?")
+                .setItems(names, (dialog, which) -> {
+                    Album chosen = albums.get(which);
+                    showRenameDialog(chosen);
+                })
+                .show();
+    }
+
+    private void showChooseAlbumThenDelete() {
+        if (albums.isEmpty()) {
+            Toast.makeText(this, "No albums to delete", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] names = new String[albums.size()];
+        for (int i = 0; i < albums.size(); i++) {
+            names[i] = albums.get(i).getName();
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete which album?")
+                .setItems(names, (dialog, which) -> {
+                    Album chosen = albums.get(which);
+                    confirmDeleteAlbum(chosen);
+                })
+                .show();
     }
 }

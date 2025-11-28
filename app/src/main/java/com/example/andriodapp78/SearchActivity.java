@@ -1,13 +1,21 @@
 package com.example.andriodapp78;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Window;
+
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,26 +68,69 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        // load full library
+        // ===== Make status bar match main screen =====
+        Window window = getWindow();
+        // same purple background as toolbar
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.purple_700));
+
+        // White icons (NOT light status bar)
+        WindowCompat.setDecorFitsSystemWindows(window, true);
+        WindowInsetsControllerCompat insets =
+                new WindowInsetsControllerCompat(window, window.getDecorView());
+        insets.setAppearanceLightStatusBars(false);   // false = white icons
+
+        // ===== Toolbar with back arrow, white icon/text =====
+        Toolbar toolbar = findViewById(R.id.toolbar_search);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Search Photos");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // title text white
+        toolbar.setTitleTextColor(Color.WHITE);
+
+        // make back arrow white (after setDisplayHomeAsUpEnabled)
+        Drawable nav = toolbar.getNavigationIcon();
+        if (nav != null) {
+            nav.setTint(ContextCompat.getColor(this, android.R.color.white));
+        }
+
+        // clicking the arrow finishes this activity
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        // ===== Load library =====
         library = Storage.load(this);
 
-        editTagValue1 = findViewById(R.id.edit_tag_value1);
-        editTagValue2 = findViewById(R.id.edit_tag_value2);
-        groupType1    = findViewById(R.id.group_type1);
-        groupType2    = findViewById(R.id.group_type2);
-        groupAndOr    = findViewById(R.id.group_and_or);
-        buttonSearch  = findViewById(R.id.button_search);
+        // ===== Find views =====
+        editTagValue1   = findViewById(R.id.edit_tag_value1);
+        editTagValue2   = findViewById(R.id.edit_tag_value2);
+        groupType1      = findViewById(R.id.group_type1);
+        groupType2      = findViewById(R.id.group_type2);
+        groupAndOr      = findViewById(R.id.group_and_or);
+        buttonSearch    = findViewById(R.id.button_search);
         recyclerResults = findViewById(R.id.recycler_results);
 
+        // ===== RecyclerView setup =====
         recyclerResults.setLayoutManager(new LinearLayoutManager(this));
-        // use your existing adapter constructor
         resultsAdapter = new SearchResultsAdapter(searchResults, this, library);
         recyclerResults.setAdapter(resultsAdapter);
 
+        // auto-complete + radio listeners
         setupAutoCompleteAdapters();
         setupTypeRadioListeners();
 
         buttonSearch.setOnClickListener(v -> runSearch());
+    }
+
+    // handle toolbar back arrow via menu as well (backup)
+    @Override
+    public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // Build person/location suggestion lists from all tags
@@ -110,7 +161,7 @@ public class SearchActivity extends AppCompatActivity {
                 new ArrayList<>(locations)
         );
 
-        // default: first query is person, second is location (matches your XML defaults)
+        // default: first query is person, second is location
         applyAdapterForField(editTagValue1, true);
         applyAdapterForField(editTagValue2, false);
     }
@@ -141,7 +192,9 @@ public class SearchActivity extends AppCompatActivity {
         String value2 = editTagValue2.getText().toString().trim();
 
         if (value1.isEmpty()) {
-            Toast.makeText(this, "Please enter at least tag value 1", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                    "Please enter at least tag value 1",
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -178,9 +231,9 @@ public class SearchActivity extends AppCompatActivity {
                 if (!hasSecondTag) {
                     keep = match1;
                 } else if (useAnd) {
-                    keep = match1 && match2;   // conjunction
+                    keep = match1 && match2;   // AND
                 } else {
-                    keep = match1 || match2;   // disjunction (OR)
+                    keep = match1 || match2;   // OR
                 }
 
                 if (keep) {
@@ -208,3 +261,4 @@ public class SearchActivity extends AppCompatActivity {
         return false;
     }
 }
+

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
-        android:id="@+id/action_search"
-        android:title="Search photos"
+        android:id="@+id/action_rename_album"
+        android:title="Rename Album"
         android:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete_album"
+        android:title="Delete Album"
+        android:showAsAction="never" />
+
 </menu>

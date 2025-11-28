@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Toolbar 3-dot overflow menu: use black text -->
+    <style name="MyOverflowMenu" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+</resources>

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.andriodapp78.photos.model.Album;
@@ -45,6 +46,14 @@ public class PhotoViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
+
+        // ----- Toolbar with back arrow -----
+        Toolbar toolbar = findViewById(R.id.toolbar_photo);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // back arrow
+            getSupportActionBar().setTitle("");                    // we show filename below instead
+        }
 
         imageFull = findViewById(R.id.image_full);
         captionText = findViewById(R.id.text_caption);
@@ -93,7 +102,7 @@ public class PhotoViewActivity extends AppCompatActivity {
             }
         });
 
-        // Click on "No tags" / tags line to show tag menu
+        // Click on tags line opens tag menu as well
         tagsText.setOnClickListener(v -> showTagMenuForCurrentPhoto());
 
         showPhoto();
@@ -127,7 +136,6 @@ public class PhotoViewActivity extends AppCompatActivity {
         for (int i = 0; i < tags.size(); i++) {
             Tag t = tags.get(i);
             if (i > 0) sb.append(" | ");
-            // use type/value names you already have
             sb.append(t.getType()).append(" = ").append(t.getValue());
         }
         tagsText.setText(sb.toString());
@@ -240,7 +248,7 @@ public class PhotoViewActivity extends AppCompatActivity {
                 .show();
     }
 
-    // ====== 3-dot overflow menu (Add/Delete Tag) ======
+    // ====== Toolbar menu: 3-dot for tags + back arrow ======
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -252,6 +260,14 @@ public class PhotoViewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+
+        // Back arrow in toolbar
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        // Tag actions
         if (id == R.id.action_add_tag) {
             addTagForCurrentPhoto();
             return true;
@@ -259,6 +275,7 @@ public class PhotoViewActivity extends AppCompatActivity {
             deleteTagForCurrentPhoto();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

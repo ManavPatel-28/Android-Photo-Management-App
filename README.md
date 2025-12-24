@@ -1,56 +1,43 @@
-# AndriodApp78
+📸 Android Photo Management App (Java, Android Studio)
 
-📸 AndroidApp78 — Android Photos Application
+This project is a full-featured Android application that allows users to organize and manage photo albums on a mobile device.
+It demonstrates software engineering principles such as object-oriented design, mobile UI development, and application state management.
 
-CS 213 — Fall 2025
-Group 78 • Android Studio • SDK 34 • Java 17
+🚀 Features
+- Create and manage photo albums
+- Browse and view photos within albums
+- Tag photos and search using auto-completion
+- Slideshow navigation for images
+- Responsive user interface using XML layouts
 
-Authors / Team
-Name	GitHub
-Manav Patel	github.com/Manavpatel2811
-Akshar Patel	github.com/aksharpatel1
+🛠 Tech Stack
+- Language: Java
+- Platform: Android
+- IDE: Android Studio
+- UI: XML Layouts
+- Version Control: Git, GitHub
 
-📱 Overview
+▶️ How to Run
+1. Clone the repository:
+   git clone https://github.com/ManavPatel-28/Android-Photo-Management-App.git
 
-This project is an Android port of the JavaFX “Photos” application.
-The Android version supports a single user, as the app runs on a personal phone.
-All data is saved locally using serialization.
+2. Open the project in Android Studio
 
-The application provides:
+3. Sync Gradle files when prompted
 
-Album management
+4. Run the application on an Android emulator or physical Android device
 
-Photo display (full size + thumbnails)
+📂 Implementation Details
+- Core application logic was ported and refactored from a JavaFX desktop application to the Android platform.
+- Applied object-oriented design principles to maintain modularity and clean separation of concerns.
+- Implemented event handling and state management to support smooth user interaction.
+- Designed layouts using XML to ensure a clean and consistent mobile UI.
 
-Tagging system
+👨‍🎓 University Project
+This project was developed as part of **CS 213: Software Methodology** at **Rutgers University**.
 
-Moving photos between albums
+👨‍💻 Author
+Manav Sachin Patel
 
-Search by tags with AND/OR & Auto-Complete
-
-Slideshow (manual navigation)
-
-
-<img width="549" height="774" alt="image" src="https://github.com/user-attachments/assets/7ee2e0af-7cb4-4d4f-aa57-01355ab918a3" />
-
-
-Data Storage
-
-All data stored via Java serialization inside internal app storage.
-
-Saves automatically on:
-
-Add/Delete Album
-
-Add/Delete Photo
-
-Add/Delete Tag
-
-Move Photo
-
-No user login, so single library file persists across sessions.
-
-
-
-
-
+LinkedIn: https://www.linkedin.com/in/manav-patel-211467333  
+GitHub: https://github.com/ManavPatel-28

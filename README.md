@@ -57,7 +57,7 @@ The project demonstrates **object-oriented programming, mobile UI development, a
 
    ---
 
-📂 Implementation Details
+📂 **Implementation Details**
 
        - Core application logic was ported and refactored from a JavaFX desktop application to the Android platform.
 
@@ -71,7 +71,7 @@ The project demonstrates **object-oriented programming, mobile UI development, a
 
 ---
 
-🎯 Learning Outcomes
+🎯 **Learning Outcomes**
 
         - Android application development using Java
  
@@ -87,15 +87,15 @@ The project demonstrates **object-oriented programming, mobile UI development, a
 
 ---
 
-👨‍🎓 University Project
+👨‍🎓 **University Project**
 
 This project was developed as part of the course at Rutgers University.
 
 ---
 
-👨‍💻 Author
+👨‍💻 **Author**
 
-Manav Sachin Patel
+**Manav Sachin Patel**
 
 - LinkedIn
 - GitHub

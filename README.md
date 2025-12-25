@@ -97,8 +97,8 @@ This project was developed as part of the course at Rutgers University.
 
 **Manav Sachin Patel**
 
-- LinkedIn
-- GitHub
+- [LinkedIn](https://www.linkedin.com/in/manav-patel-211467333)  
+- [GitHub](https://github.com/ManavPatel-28)
 
 
 

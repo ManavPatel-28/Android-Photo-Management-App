@@ -85,11 +85,6 @@ The project demonstrates **object-oriented programming, mobile UI development, a
 
         - Using Git and GitHub for version control and collaboration
 
----
-
-👨‍🎓 **University Project**
-
-This project was developed as part of the course at Rutgers University.
 
 ---
 
